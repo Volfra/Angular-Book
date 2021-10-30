@@ -12,6 +12,7 @@ export class AddBookComponent implements OnInit {
   book = new Book();
   submitted = false;
   msgError = '';
+  isDisabled = true; 
 
   constructor(private libraryService: LibraryService) { }
 
@@ -19,12 +20,20 @@ export class AddBookComponent implements OnInit {
   }
 
   existsPK (val:string): void {
+    this.msgError  = '';
+    this.isDisabled = true; 
     this.libraryService.get(val)
       .subscribe(
         data => {
-          console.log(data);
+          if (data!=null){
+            this.msgError  = 'PK exists';
+            this.isDisabled = true; 
+          } else {
+            this.isDisabled = false; 
+          }
         },
         error => {
+          this.msgError  = '';
           console.log(error);
         });
   }
@@ -42,9 +51,9 @@ export class AddBookComponent implements OnInit {
           this.submitted=true;
           console.log(data);
         },
-        error => {
-          this.msgError  = error.message +' \n '+ error.error.message;
-          console.log(error);
+        err => {
+          this.msgError  = err.error.message;
+          console.log(err);
         });
   }
 
@@ -53,6 +62,7 @@ export class AddBookComponent implements OnInit {
     this.book.isbn = null;
     this.book.name = null;
     this.book.author = null;
+    this.isDisabled = true;
   }
 
 }
