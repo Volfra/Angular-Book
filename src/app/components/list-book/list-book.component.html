@@ -1,0 +1,135 @@
+
+<div class="container">
+  <div class="card">
+    <h3 class="text-center">Book List</h3>
+    <div class="card-body">
+    <div class="form-group form-inline">
+      Search book by name:
+      <input class="form-control ml-2" type="text" name="searchTerm" [(ngModel)]="searchTerm"
+        (input)="search($event.target.value)" />
+    </div>
+      <table class="table table-striped">
+        <thead>
+          <th>ISBN</th>
+          <th>NAME</th>
+          <th>AUTHOR</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of bookSet | listFilter: searchTerm ; let i = index " >
+            <td>{{item.isbn}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.author}}</td>
+            <td>
+              <button class="btn btn-info btn-sm"    
+              (click)="triggerModal(modalData, item)">
+                Edit </button>
+                &nbsp;
+              <button class='btn btn-danger btn-sm' (click)="deleteBook(item.isbn)" >
+                Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+
+<ng-template #modalData let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Edit Book</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div style="width: 400px; margin: auto;">
+      <div class="submit-form">
+          <div class="form-group">
+            <label for="isbn">ISBN</label>
+            <input
+              disabled
+              type="text"
+              class="form-control"
+              id="isbn"
+              required
+              [(ngModel)]="currentBook.isbn"
+              name="isbn"
+            />
+          </div>
+          <div class="form-group">
+            <label for="name">NAME</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              required
+              [(ngModel)]="currentBook.name"
+              name="name"
+            />
+          </div>
+          <div class="form-group">
+              <label for="author">AUTHOR</label>
+              <input
+                type="text"
+                class="form-control"
+                id="author"
+                required
+                [(ngModel)]="currentBook.author"
+                name="author"
+              />
+          </div>
+        </div>
+    </div>
+  
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" 
+    
+    (click)="updateBook()"
+    
+    (click)="modal.close('Save click')">Save</button>
+  </div>
+</ng-template>
+
+<hr>
+
+<div class="row">
+  <div class="col-md-3">
+    <h4>Books List</h4>
+    <ul class="list-group">
+      <li 
+        class="list-group-item" 
+        *ngFor="let bookId of bookSet; let i = index" 
+        [class.active]="i == currentIndex"
+        (click)="setActiveBook(bookId, i)">
+        <div class="col">{{ bookId.name }}</div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<hr>
+
+<div class="card-text">
+  <form #f="ngForm" class="form-inline">
+    <div class="form-group">
+      <label for="isbn">ISBN:</label>
+      <input [(ngModel)]="isbnBook" id="name" name="name" class="form-control ml-2 mr-2">
+    </div>
+    <button (click)="retrieveBook(isbnBook)" [disabled]="!f?.valid" class="btn btn-primary">Search</button>
+  </form>
+    <div class="col-md-6">
+  <div *ngIf="currentBook" >
+    <div>
+      <label><strong>ISBN:</strong></label> {{ currentBook.isbn }}
+      <label><strong>Name:</strong></label> {{ currentBook.name }}
+      <label><strong>Author:</strong></label> {{ currentBook.author }}
+    </div>
+  </div>
+  <label><strong></strong></label> {{ msgError }}
+</div>
+</div>
