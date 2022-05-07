@@ -26,26 +26,6 @@ export class ListBookComponent implements OnInit {
     this.refreshList();
   }
 
-  triggerModal(content:any, val:Book) {
-    this.currentBook = val
-    this.retrieveBook(this.currentBook.isbn)
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((res) => {
-      this.closeModal = `Closed with: ${res}`;
-    }, (res) => {
-      this.closeModal = `Dismissed ${this.getDismissReason(res)}`;
-    });
-  }
-  
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
-    }
-  }
-
   search(value: string): void {
     this.bookFil = this.bookSet.filter((val) => val.name.toLowerCase().includes(value));
     this.collectionSize = this.bookFil.length;
@@ -109,6 +89,25 @@ export class ListBookComponent implements OnInit {
     this.retrieveBooks();
   }
 
-
+  //Emergent Window Edit (exit: x or esc or click backdrop)
+  triggerModal(content:any, val:Book) {
+    this.currentBook = val
+    this.retrieveBook(this.currentBook.isbn)
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((res) => {
+      this.closeModal = `Closed with: ${res}`;
+    }, (res) => {
+      this.closeModal = `Dismissed ${this.getDismissReason(res)}`;
+    });
+  }
+  
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
+    }
+  }
 
 }
